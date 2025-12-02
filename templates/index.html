@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered brain hemorrhage detection system with two-stage deep learning pipeline and visual explanations">
+    <title>🧠 AI Brain Hemorrhage Detection System</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-icon">🧠</div>
+            <h1>AI Brain Hemorrhage Detection</h1>
+            <p class="subtitle">
+                Two-Stage Deep Learning Pipeline with Visual Explanations
+            </p>
+            <div class="system-info">
+                <div class="info-badge">
+                    <span>🎯</span>
+                    <span>Stage 1: Binary Detection</span>
+                </div>
+                <div class="info-badge">
+                    <span>🔍</span>
+                    <span>Stage 2: Subtype Classification</span>
+                </div>
+                <div class="info-badge">
+                    <span>🔥</span>
+                    <span>Grad-CAM Visualization</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- How It Works Section -->
+        <section class="section">
+            <div class="glass-card">
+                <h2>🎯 How It Works</h2>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-header">
+                            <span class="result-icon">1️⃣</span>
+                            <h3 class="result-title">Hemorrhage Detector</h3>
+                        </div>
+                        <p>Analyzes Brain + Bone window CT images to determine if ANY hemorrhage is present.</p>
+                        <p><strong>Output:</strong> Probability (0-1) and binary decision</p>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-header">
+                            <span class="result-icon">2️⃣</span>
+                            <h3 class="result-title">Subtype Classifier</h3>
+                        </div>
+                        <p>Identifies specific hemorrhage types when Stage 1 detects hemorrhage.</p>
+                        <p><strong>Types:</strong> Intraventricular, Intraparenchymal, Subarachnoid, Epidural, Subdural, Skull Fracture</p>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-header">
+                            <span class="result-icon">3️⃣</span>
+                            <h3 class="result-title">Visual Explanation</h3>
+                        </div>
+                        <p>Generates Grad-CAM heatmaps highlighting regions that influenced the prediction.</p>
+                        <p><strong>Features:</strong> Heatmap overlays and bounding boxes</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upload Section -->
+        <section class="upload-section">
+            <h2 class="text-center">📤 Upload CT Scan</h2>
+            
+            <!-- Upload Zone -->
+            <div class="upload-zone" id="uploadZone">
+                <div class="upload-icon">🖼️</div>
+                <p class="upload-text">Drag & Drop your CT scan here</p>
+                <p class="upload-hint">or click to browse</p>
+                <p class="upload-hint mt-2">Supported formats: PNG, JPEG (max 16MB)</p>
+                <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg">
+            </div>
+            
+            <!-- Image Preview -->
+            <div class="image-preview" id="imagePreview">
+                <div class="preview-container">
+                    <img id="previewImage" src="" alt="Preview" class="preview-image">
+                    <button class="remove-image" id="removeImage" title="Remove image">×</button>
+                </div>
+                <div class="text-center mt-3">
+                    <button class="btn btn-primary btn-large" id="analyzeBtn" disabled>
+                        <span>🔍</span>
+                        <span>Analyze CT Scan</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading Section -->
+        <section class="loading" id="loading">
+            <div class="spinner"></div>
+            <p class="loading-text">Analyzing CT scan...</p>
+            <p style="color: var(--medical-gray); margin-top: 0.5rem;">
+                Running two-stage inference pipeline
+            </p>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section" id="results">
+            <h2 class="text-center">📊 Analysis Results</h2>
+            
+            <div class="results-grid">
+                <!-- Stage 1: Detection Results -->
+                <div class="glass-card">
+                    <div class="result-header">
+                        <span class="result-icon">1️⃣</span>
+                        <div>
+                            <h3 class="result-title">Stage 1: Detection</h3>
+                            <p style="font-size: 0.9rem; color: var(--medical-gray); margin: 0;">
+                                Binary Hemorrhage Screening
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="result-value" id="hemorrhageStatus">-</div>
+                    
+                    <div style="margin-top: var(--spacing-md);">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--medical-gray);">Probability:</span>
+                            <span style="font-weight: 700; color: var(--accent-cyan);" id="detectionProbability">-</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--medical-gray);">Confidence:</span>
+                            <span class="confidence-badge" id="confidenceBadge">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stage 2: Subtype Classification -->
+                <div class="glass-card" id="subtypesContainer" style="display: none;">
+                    <div class="result-header">
+                        <span class="result-icon">2️⃣</span>
+                        <div>
+                            <h3 class="result-title">Stage 2: Subtypes</h3>
+                            <p style="font-size: 0.9rem; color: var(--medical-gray); margin: 0;">
+                                Multi-label Classification
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="subtypes-list" id="subtypesList">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Grad-CAM Visualizations -->
+            <div class="gradcam-section" id="gradcamContainer" style="display: none;">
+                <h2 class="text-center">🔥 Grad-CAM Visual Explanations</h2>
+                <p class="text-center" style="color: var(--medical-gray); margin-bottom: var(--spacing-lg);">
+                    Heatmaps show regions that influenced the model's predictions
+                </p>
+                
+                <div class="gradcam-grid" id="gradcamGrid">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+            
+            <!-- New Analysis Button -->
+            <div class="text-center mt-4">
+                <button class="btn btn-primary" onclick="location.reload()">
+                    <span>🔄</span>
+                    <span>Analyze Another Scan</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="text-align: center; padding: var(--spacing-xl) 0; color: var(--medical-gray); border-top: 1px solid var(--glass-border); margin-top: var(--spacing-xl);">
+            <p>
+                <strong>⚕️ Clinical Note:</strong> This system is designed to assist medical professionals.
+                All diagnoses should be confirmed by qualified radiologists.
+            </p>
+            <p style="margin-top: var(--spacing-sm); font-size: 0.9rem;">
+                Powered by Deep Learning • ResNet50 Architecture • PyTorch
+            </p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
