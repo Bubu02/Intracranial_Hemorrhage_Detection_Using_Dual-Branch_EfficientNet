@@ -1,0 +1,434 @@
+:root {
+    /* Colors based on reference image */
+    --primary-bg: #F0F4F8;
+    --card-bg: #FFFFFF;
+    --sidebar-bg: #FFFFFF;
+
+    --accent-blue: #3B82F6;
+    --accent-green: #10B981;
+    --accent-red: #EF4444;
+
+    --success-bg: #D1FAE5;
+    /* Light green */
+    --success-text: #065F46;
+
+    --danger-bg: #FEE2E2;
+    /* Light red */
+    --danger-text: #991B1B;
+
+    --text-dark: #111827;
+    --text-gray: #6B7280;
+    --border-color: #E5E7EB;
+
+    --sidebar-width: 250px;
+    --header-height: 60px;
+    --border-radius: 16px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--primary-bg);
+    color: var(--text-dark);
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Sidebar & Header (Simplified from previous, kept same for context) */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ... existing sidebar styles ... */
+/* NOTE: Reusing existing sidebar styles from previous file would be ideal, 
+   but for completeness I'll simplify or assume they exist. 
+   I will focus on the new grid layout below. */
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #E0E7FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar svg {
+    width: 24px;
+    height: 24px;
+    color: #4F46E5;
+}
+
+.user-info .user-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.user-info .user-id {
+    font-size: 0.8rem;
+    color: var(--text-gray);
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-gray);
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background-color: #F3F4F6;
+    color: var(--text-dark);
+}
+
+.nav-item svg {
+    width: 20px;
+    height: 20px;
+}
+
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--primary-bg);
+}
+
+
+.top-header {
+    height: 70px;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 2rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-right: auto;
+}
+
+.top-nav {
+    display: flex;
+    gap: 2rem;
+    margin-right: 2rem;
+}
+
+.top-nav a {
+    text-decoration: none;
+    color: var(--text-gray);
+    font-weight: 500;
+}
+
+.top-nav a.active {
+    color: var(--text-dark);
+}
+
+
+/* DASHBOARD GRID - NEW LAYOUT */
+.dashboard-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Equal width columns */
+    gap: 2rem;
+    padding: 1rem 2rem 2rem 2rem;
+    overflow-y: auto;
+}
+
+.panel {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* LEFT PANEL: IMAGE VIEWER */
+.image-panel {
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+.image-viewer {
+    flex: 1;
+    background-color: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    /* Reduced from 400px */
+    max-height: 65vh;
+    /* Limit height to fit screen */
+}
+
+.image-viewer img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.placeholder-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #4B5563;
+}
+
+.icon-circle {
+    width: 64px;
+    height: 64px;
+    background-color: #1F2937;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: #9CA3AF;
+}
+
+.icon-circle svg {
+    width: 32px;
+    height: 32px;
+}
+
+.image-info {
+    margin-top: 1.5rem;
+}
+
+.image-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.image-info p {
+    color: var(--text-gray);
+    font-size: 0.9rem;
+}
+
+
+/* RIGHT PANEL: ACTIONS & RESULTS */
+.right-panel {
+    justify-content: flex-start;
+}
+
+.panel-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Upload Box */
+.upload-box {
+    border: 2px dashed #CBD5E1;
+    border-radius: 12px;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background-color: #F8FAFC;
+}
+
+.upload-box:hover {
+    border-color: var(--accent-blue);
+    background-color: #EFF6FF;
+}
+
+.cloud-icon {
+    width: 56px;
+    height: 56px;
+    background-color: #DBEAFE;
+    color: var(--accent-blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.cloud-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.upload-box p {
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.upload-box .sub-text {
+    color: var(--text-gray);
+    font-size: 0.85rem;
+}
+
+
+/* Results Cards */
+.results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-card {
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Card Variants */
+.result-card.success {
+    background-color: var(--success-bg);
+    border: 1px solid #A7F3D0;
+}
+
+.result-card.danger {
+    background-color: var(--danger-bg);
+    border: 1px solid #FECACA;
+}
+
+.result-card.warning {
+    background-color: #FEF3C7;
+    /* Yellow */
+    border: 1px solid #FDE68A;
+}
+
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.card-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #4B5563;
+    /* Gray depending on bg, needs contrast */
+}
+
+/* Improve contrast for specific backgrounds */
+.result-card.success .card-label {
+    color: #064E3B;
+}
+
+.result-card.danger .card-label {
+    color: #7F1D1D;
+}
+
+.card-value-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+.result-card.success .status-indicator {
+    color: var(--accent-green);
+}
+
+.result-card.danger .status-indicator {
+    color: var(--accent-red);
+}
+
+.status-text {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.result-card.success .status-text {
+    color: var(--success-text);
+}
+
+.result-card.danger .status-text {
+    color: var(--danger-text);
+}
+
+
+.card-score {
+    text-align: right;
+}
+
+.score-label {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 0.25rem;
+}
+
+.score-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.8);
+}

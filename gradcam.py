@@ -122,7 +122,7 @@ def _get_brain_target_layer(model):
 
 def generate_gradcam_for_subtypes(model, input_tensor, original_image,
                                   detected_subtypes, device,
-                                  cam_threshold=0.25):
+                                  cam_threshold=0.5):
     """
     Returns:
         {
@@ -152,25 +152,39 @@ def generate_gradcam_for_subtypes(model, input_tensor, original_image,
                                    class_idx, device)
 
         # ---------- Heatmap Overlay ----------
+        # User requested distinct bounding box style logic
+        # keeping the overlay generation standard
         overlay, cam_resized = DualBranchGradCAM.generate_overlay(original_image, cam)
 
         # ---------- Bounding Boxes ----------
+        # Use higher threshold (0.5) as per reference to avoid covering entire skull
         mask = (cam_resized > cam_threshold).astype("uint8") * 255
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         boxes = []
         for cnt in contours:
             x, y, w, h = cv2.boundingRect(cnt)
-            if w*h < 60:    # ignore tiny noise boxes
+            # Ignore very small boxes
+            if w * h < 100:
                 continue
             boxes.append((x, y, w, h))
 
-        # ---------- Draw boxes directly ----------
+        # ---------- Draw boxes with Subtype Colors ----------
         color = SUBTYPE_COLORS.get(subtype_name, (255, 255, 255))
+        
+        # Determine specific color adjustments if needed
+        # (Reference mentioned "except skull fractures", but unclear if that meant 
+        #  different handling. For now, we use the defined CYAN for skull fracture 
+        #  to ensure it's distinct from others).
 
         overlay_boxes = overlay.copy()
         for (x, y, w, h) in boxes:
-            cv2.rectangle(overlay_boxes, (x, y), (x+w, y+h), color, 3)
+            # Thickness 2 is usually cleaner than 3 for smaller regions
+            cv2.rectangle(overlay_boxes, (x, y), (x+w, y+h), color, 2)
+            
+            # Optional: Add label text above box
+            # cv2.putText(overlay_boxes, subtype_name, (x, y-5), 
+            #             cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
         # ---------- Store outputs ----------
         results[subtype_name] = {

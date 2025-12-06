@@ -64,7 +64,7 @@ def cleanup_old_files(folder, max_age_hours=24):
 @app.route('/')
 def index():
     """Main page"""
-    return render_template('index.html')
+    return render_template('dashboard.html')
 
 @app.route('/api/model-info')
 def model_info():
