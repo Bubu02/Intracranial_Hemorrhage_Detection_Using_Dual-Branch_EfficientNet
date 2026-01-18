@@ -152,9 +152,25 @@ def generate_gradcam_for_subtypes(model, input_tensor, original_image,
                                    class_idx, device)
 
         # ---------- Heatmap Overlay ----------
-        # User requested distinct bounding box style logic
-        # keeping the overlay generation standard
-        overlay, cam_resized = DualBranchGradCAM.generate_overlay(original_image, cam)
+        # User requested to REMOVE heatmap and only keep bounding boxes.
+        # We still need cam_resized for box extraction, but we won't use 'overlay' for visualization.
+        
+        # Get cam_resized for box extraction logic
+        if isinstance(original_image, Image.Image):
+             original_np = np.array(original_image)
+        else:
+             original_np = original_image
+             
+        h, w = original_np.shape[:2]
+        cam_resized = cv2.resize(cam, (w, h))
+        
+        # Use original image as the base for drawing boxes (no heatmap blend)
+        # Ensure it's in a writeable format for OpenCV
+        overlay_boxes = original_np.copy()
+        if len(overlay_boxes.shape) == 2: # grayscale
+             overlay_boxes = cv2.cvtColor(overlay_boxes, cv2.COLOR_GRAY2RGB)
+        elif overlay_boxes.shape[2] == 4: # RGBA
+             overlay_boxes = cv2.cvtColor(overlay_boxes, cv2.COLOR_RGBA2RGB)
 
         # ---------- Bounding Boxes ----------
         # Use higher threshold (0.5) as per reference to avoid covering entire skull
@@ -177,7 +193,7 @@ def generate_gradcam_for_subtypes(model, input_tensor, original_image,
         #  different handling. For now, we use the defined CYAN for skull fracture 
         #  to ensure it's distinct from others).
 
-        overlay_boxes = overlay.copy()
+        # overlay_boxes is already initialized above with the original image
         for (x, y, w, h) in boxes:
             # Thickness 2 is usually cleaner than 3 for smaller regions
             cv2.rectangle(overlay_boxes, (x, y), (x+w, y+h), color, 2)

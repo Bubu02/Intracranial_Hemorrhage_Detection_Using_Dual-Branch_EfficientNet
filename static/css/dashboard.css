@@ -173,7 +173,7 @@ body {
     /* Equal width columns */
     gap: 2rem;
     padding: 1rem 2rem 2rem 2rem;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 .panel {

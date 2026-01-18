@@ -1,0 +1,27 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+
+# Project specific heavy files
+Dataset/
+Jupyter Notebook/
+install_log.txt
+
+# Saved Models - EXCLUDE zip/tmp but KEEP .pth
+Saved Models/*.zip
+Saved Models/*.tar
+Saved Models/temp*
+
+# IDEs
+.idea/
+.vscode/
