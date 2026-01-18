@@ -36,16 +36,24 @@ app.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
 app.config['RESULTS_FOLDER'] = str(RESULTS_FOLDER)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
-# Load models on startup
-print("Loading AI models...")
-try:
-    detector_model, classifier_model, device = load_models()
-    print("✓ Models loaded successfully!")
-except Exception as e:
-    print(f"❌ Error loading models: {e}")
-    detector_model = None
-    classifier_model = None
-    device = None
+# Global model variables (Lazy Loading)
+detector_model = None
+classifier_model = None
+device = None
+
+def get_lazy_models():
+    """Load models only when needed to save RAM on startup"""
+    global detector_model, classifier_model, device
+    
+    if detector_model is None or classifier_model is None:
+        print("Lazy loading models...")
+        try:
+            detector_model, classifier_model, device = load_models()
+        except Exception as e:
+            print(f"❌ Error loading models: {e}")
+            raise e
+            
+    return detector_model, classifier_model, device
 
 def allowed_file(filename):
     """Check if file extension is allowed"""
@@ -70,9 +78,14 @@ def index():
 def model_info():
     """Get model information"""
     try:
+        # Check status without triggering full load if not needed, 
+        # or just load them if valid info is required. 
+        # For info endpoint, we can just check if they are loaded or return static info.
+        
         info = get_model_info()
-        info['device'] = str(device)
-        info['status'] = 'ready' if detector_model is not None else 'error'
+        # Only show device if loaded
+        info['device'] = str(device) if device else "Not loaded yet"
+        info['status'] = 'ready' if detector_model is not None else 'waiting_for_first_request'
         return jsonify(info)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -81,9 +94,11 @@ def model_info():
 def upload_file():
     """Handle file upload"""
     try:
-        # Check if models are loaded
-        if detector_model is None or classifier_model is None:
-            return jsonify({'error': 'Models not loaded. Please restart the server.'}), 500
+        # Identify start
+        # Ensure models are valid before processing upload? 
+        # Actually upload doesn't need models, but good to check health.
+        # Let's not load models on upload to save time, only on analyze.
+        pass # No model check needed for just saving the file
         
         # Check if file is present
         if 'file' not in request.files:
@@ -133,10 +148,13 @@ def analyze():
         
         if not filepath.exists():
             return jsonify({'error': 'File not found'}), 404
+            
+        # Ensure models are loaded now
+        det_model, cls_model, dev = get_lazy_models()
         
         # Run inference pipeline
         print(f"Running inference on {filename}...")
-        results = run_full_pipeline(detector_model, classifier_model, str(filepath), device)
+        results = run_full_pipeline(det_model, cls_model, str(filepath), dev)
         
         # Format results
         formatted_results = format_results_for_display(results)
@@ -147,11 +165,11 @@ def analyze():
             print("Generating Grad-CAM visualizations...")
             
             gradcam_results = generate_gradcam_for_subtypes(
-                classifier_model,
+                cls_model,
                 results['image_tensor'],
                 results['original_image'],
                 results['stage2']['detected_subtypes'],
-                device
+                dev
             )
             
             # Save Grad-CAM images

@@ -135,6 +135,21 @@ def load_models(device=None):
     detector = detector.to(device).eval()
     classifier = classifier.to(device).eval()
 
+    # Apply dynamic quantization to reduce RAM usage (Critical for Render Free Tier)
+    # NOTE: We ONLY quantize the Detector (Stage 1).
+    # We CANNOT quantize the Classifier (Stage 2) because Grad-CAM requires 
+    # backpropagation (gradients), which is not supported on quantized layers.
+    if device.type == 'cpu':
+        print("Applying dynamic quantization for CPU (Detector only)...")
+        try:
+            detector = torch.quantization.quantize_dynamic(
+                detector, {nn.Linear}, dtype=torch.qint8
+            )
+            # classifier must remain float32 for Grad-CAM
+            print("✓ Detector quantized successfully!")
+        except Exception as e:
+            print(f"Warning: Quantization failed, keeping original models. Error: {e}")
+
     print("✓ Models loaded successfully!")
 
     return detector, classifier, device
