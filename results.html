@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroSafe AI | Inference Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #eef4f8;
+            color: #1a2332;
+        }
+        .page {
+            width: min(1360px, calc(100% - 32px));
+            margin: 20px auto;
+            display: grid;
+            gap: 18px;
+        }
+        .card {
+            background: #fff;
+            border: 1px solid #e3e8ef;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+        .topbar {
+            padding: 22px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+        .topbar h1, .topbar p, h2, h3 { margin-top: 0; }
+        .topbar p, .muted { color: #5f6d7e; line-height: 1.6; }
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        button {
+            border: 0;
+            border-radius: 10px;
+            padding: 11px 16px;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .primary { background: #137fec; color: #fff; }
+        .secondary { background: #fff; color: #137fec; border: 1px solid #e3e8ef; }
+        .content {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1.45fr .95fr;
+            gap: 18px;
+        }
+        .section {
+            border: 1px solid #e3e8ef;
+            border-radius: 16px;
+            padding: 16px;
+            background: #fff;
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 14px;
+        }
+        .preview-card {
+            border-radius: 16px;
+            overflow: hidden;
+            background: #0d1522;
+        }
+        .preview-label {
+            padding: 10px 12px;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            background: rgba(255,255,255,.08);
+        }
+        .preview-card img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: contain;
+            background: #020617;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+        .slider {
+            width: 100%;
+            margin-top: 12px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .stat {
+            padding: 14px;
+            border-radius: 14px;
+            background: #f5f8fb;
+            border: 1px solid #e3e8ef;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #5f6d7e;
+            margin-bottom: 6px;
+        }
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        .meta-list, .timeline {
+            display: grid;
+            gap: 10px;
+        }
+        .meta-row, .timeline-item {
+            padding: 13px 14px;
+            border-radius: 14px;
+            border: 1px solid #e3e8ef;
+            background: #f9fbfd;
+        }
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+        }
+        .meta-key { color: #5f6d7e; font-size: 13px; }
+        .meta-value { font-size: 13px; font-weight: 600; text-align: right; word-break: break-word; }
+        .timeline {
+            max-height: 420px;
+            overflow: auto;
+        }
+        .timeline-item {
+            cursor: pointer;
+            background: #fff;
+        }
+        .timeline-item.active {
+            border-color: #137fec;
+            background: #f0f7ff;
+        }
+        .timeline-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+        .pill {
+            display: inline-flex;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+        }
+        .positive { background: #fee4e2; color: #b42318; }
+        .negative { background: #d1fadf; color: #027a48; }
+        .empty {
+            padding: 30px;
+            text-align: center;
+            color: #5f6d7e;
+        }
+        @media (max-width: 1100px) {
+            .content, .preview-grid, .stats { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="card topbar">
+            <div>
+                <h1>Inference Results</h1>
+                <p>Patient directory results are shown here with synchronized brain and bone previews for every matched pair.</p>
+            </div>
+            <div class="actions">
+                <button class="secondary" id="back-btn" type="button">Back To Upload</button>
+                <button class="primary" id="play-btn" type="button">Play</button>
+            </div>
+        </header>
+
+        <section class="card content" id="content" hidden>
+            <div>
+                <div class="section">
+                    <h2>Dual Preview</h2>
+                    <p class="muted" id="viewer-summary"></p>
+                    <div class="preview-grid">
+                        <div class="preview-card">
+                            <div class="preview-label">Brain Window</div>
+                            <img id="brain-image" alt="Brain preview">
+                        </div>
+                        <div class="preview-card">
+                            <div class="preview-label">Bone Window</div>
+                            <img id="bone-image" alt="Bone preview">
+                        </div>
+                    </div>
+                    <div class="controls">
+                        <button class="secondary" id="prev-btn" type="button">Previous</button>
+                        <button class="secondary" id="next-btn" type="button">Next</button>
+                        <strong id="frame-label"></strong>
+                    </div>
+                    <input class="slider" id="slice-slider" type="range" min="0" max="0" value="0">
+                </div>
+
+                <div class="section">
+                    <h3>Patient Summary</h3>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-label">Patient Result</div>
+                            <div class="stat-value" id="patient-label">-</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Max Probability</div>
+                            <div class="stat-value" id="patient-probability">-</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Matched Pairs</div>
+                            <div class="stat-value" id="matched-pairs">-</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Flagged Slices</div>
+                            <div class="stat-value" id="flagged-slices">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <aside>
+                <div class="section">
+                    <h3>Selected Slice</h3>
+                    <div class="meta-list">
+                        <div id="slice-pill"></div>
+                        <div class="meta-row">
+                            <div class="meta-key">Predicted Risk</div>
+                            <div class="meta-value" id="slice-probability">-</div>
+                        </div>
+                        <div class="meta-row">
+                            <div class="meta-key">Brain Source</div>
+                            <div class="meta-value" id="brain-path">-</div>
+                        </div>
+                        <div class="meta-row">
+                            <div class="meta-key">Bone Source</div>
+                            <div class="meta-value" id="bone-path">-</div>
+                        </div>
+                        <div class="meta-row">
+                            <div class="meta-key">Localization</div>
+                            <div class="meta-value" id="localization-note">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Slice Timeline</h3>
+                    <div class="timeline" id="timeline"></div>
+                </div>
+            </aside>
+        </section>
+
+        <section class="card empty" id="empty-state">
+            No inference data is available in this browser session. Return to the upload page and run folder inference first.
+        </section>
+    </div>
+
+    <script>
+        const inferenceData = JSON.parse(sessionStorage.getItem('patientInference') || 'null');
+        const content = document.getElementById('content');
+        const emptyState = document.getElementById('empty-state');
+        const backBtn = document.getElementById('back-btn');
+        const playBtn = document.getElementById('play-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slider = document.getElementById('slice-slider');
+        const viewerSummary = document.getElementById('viewer-summary');
+        const frameLabel = document.getElementById('frame-label');
+        const brainImage = document.getElementById('brain-image');
+        const boneImage = document.getElementById('bone-image');
+        const patientLabel = document.getElementById('patient-label');
+        const patientProbability = document.getElementById('patient-probability');
+        const matchedPairs = document.getElementById('matched-pairs');
+        const flaggedSlices = document.getElementById('flagged-slices');
+        const slicePill = document.getElementById('slice-pill');
+        const sliceProbability = document.getElementById('slice-probability');
+        const brainPath = document.getElementById('brain-path');
+        const bonePath = document.getElementById('bone-path');
+        const localizationNote = document.getElementById('localization-note');
+        const timeline = document.getElementById('timeline');
+        let currentIndex = 0;
+        let playbackHandle = null;
+
+        function renderTimeline() {
+            timeline.innerHTML = inferenceData.slices.map((slice, index) => `
+                <div class="timeline-item ${index === currentIndex ? 'active' : ''}" data-index="${index}">
+                    <div class="timeline-head">
+                        <strong>Slice ${slice.index}</strong>
+                        <span>${(slice.probability * 100).toFixed(2)}%</span>
+                    </div>
+                    <small>${slice.label}</small>
+                </div>
+            `).join('');
+
+            timeline.querySelectorAll('.timeline-item').forEach((item) => {
+                item.addEventListener('click', () => {
+                    currentIndex = Number(item.dataset.index);
+                    renderSlice();
+                });
+            });
+        }
+
+        function renderSlice() {
+            const slice = inferenceData.slices[currentIndex];
+            const positive = slice.prediction === 1;
+            brainImage.src = slice.brain_preview;
+            boneImage.src = slice.bone_preview;
+            viewerSummary.textContent = `${slice.brain_name} paired with ${slice.bone_name}.`;
+            frameLabel.textContent = `Slice ${slice.index} of ${inferenceData.slices.length}`;
+            slicePill.innerHTML = `<span class="pill ${positive ? 'positive' : 'negative'}">${slice.label}</span>`;
+            sliceProbability.textContent = `${(slice.probability * 100).toFixed(2)}%`;
+            brainPath.textContent = slice.brain_path;
+            bonePath.textContent = slice.bone_path;
+            localizationNote.textContent = inferenceData.localization_note;
+            slider.value = String(currentIndex);
+            renderTimeline();
+        }
+
+        function togglePlayback() {
+            if (playbackHandle) {
+                clearInterval(playbackHandle);
+                playbackHandle = null;
+                playBtn.textContent = 'Play';
+                return;
+            }
+            playbackHandle = setInterval(() => {
+                currentIndex = (currentIndex + 1) % inferenceData.slices.length;
+                renderSlice();
+            }, 1200);
+            playBtn.textContent = 'Pause';
+        }
+
+        if (inferenceData && Array.isArray(inferenceData.slices) && inferenceData.slices.length) {
+            emptyState.hidden = true;
+            content.hidden = false;
+            patientLabel.textContent = inferenceData.patient_label;
+            patientProbability.textContent = `${(inferenceData.patient_probability * 100).toFixed(2)}%`;
+            matchedPairs.textContent = String(inferenceData.matched_pairs);
+            flaggedSlices.textContent = String(inferenceData.flagged_slices);
+            slider.max = String(inferenceData.slices.length - 1);
+            renderSlice();
+        }
+
+        backBtn.addEventListener('click', () => {
+            window.location.href = '/';
+        });
+        playBtn.addEventListener('click', () => {
+            if (inferenceData?.slices?.length) togglePlayback();
+        });
+        prevBtn.addEventListener('click', () => {
+            if (!inferenceData?.slices?.length) return;
+            currentIndex = currentIndex === 0 ? inferenceData.slices.length - 1 : currentIndex - 1;
+            renderSlice();
+        });
+        nextBtn.addEventListener('click', () => {
+            if (!inferenceData?.slices?.length) return;
+            currentIndex = (currentIndex + 1) % inferenceData.slices.length;
+            renderSlice();
+        });
+        slider.addEventListener('input', (event) => {
+            if (!inferenceData?.slices?.length) return;
+            currentIndex = Number(event.target.value);
+            renderSlice();
+        });
+    </script>
+</body>
+</html>

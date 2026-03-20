@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NeuroSafe AI - Brain Hemorrhage Detection Dashboard. AI-powered medical imaging analysis for neurological diagnostics.">
+    <title>NeuroSafe AI - Medical Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <style>
+        /* ===== CSS Reset & Base ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #137fec;
+            --primary-light: #e8f2fd;
+            --primary-lighter: #f0f7ff;
+            --bg-body: #f0f4f8;
+            --bg-sidebar: #ffffff;
+            --bg-card: #ffffff;
+            --bg-main: #f5f8fb;
+            --text-primary: #1a2332;
+            --text-secondary: #5f6d7e;
+            --text-muted: #8e9bae;
+            --border-color: #e3e8ef;
+            --border-light: #edf1f5;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.05);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --sidebar-width: 240px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+
+        /* ===== Dashboard Container ===== */
+        .dashboard-container {
+            display: flex;
+            width: 100%;
+            max-width: 1280px;
+            height: 540px;
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        /* ===== Sidebar ===== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 16px 14px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 8px;
+            margin-bottom: 16px;
+        }
+
+        .brand-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .brand-icon .material-symbols-outlined {
+            font-size: 20px;
+        }
+
+        .brand-info h1 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .brand-info span {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background: var(--primary-lighter);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-item .material-symbols-outlined {
+            font-size: 20px;
+        }
+
+        /* System Status */
+        .system-status {
+            padding: 12px;
+            margin-top: auto;
+        }
+
+        .system-status-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background: #22c55e;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ===== Main Content Area ===== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ===== Top Header ===== */
+        .top-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 24px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-card);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 8px 14px;
+            width: 340px;
+        }
+
+        .search-bar .material-symbols-outlined {
+            font-size: 18px;
+            color: var(--text-muted);
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 13px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+        }
+
+        .search-bar input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .notification-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .notification-btn:hover {
+            background: var(--bg-main);
+        }
+
+        .notification-btn .material-symbols-outlined {
+            font-size: 22px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #137fec, #0ea5e9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-avatar-placeholder {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* ===== Content Area ===== */
+        .content-area {
+            flex: 1;
+            padding: 16px 24px;
+            overflow-y: auto;
+            background: var(--bg-main);
+        }
+
+        .content-area::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .content-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .content-area::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        /* Overview Section */
+        .overview-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1px;
+        }
+
+        .overview-header p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-light);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        .stat-icon .material-symbols-outlined {
+            font-size: 18px;
+        }
+
+        .stat-menu {
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Content Grid (Upload + Recent Analyses) */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 16px;
+        }
+
+        /* Upload Card */
+        .upload-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 14px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .upload-card h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .upload-dropzone {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 14px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 10px;
+        }
+
+        .upload-dropzone:hover {
+            border-color: var(--primary);
+            background: var(--primary-lighter);
+        }
+
+        .upload-icon-wrapper {
+            width: 44px;
+            height: 44px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .upload-icon-wrapper .material-symbols-outlined {
+            font-size: 22px;
+            color: var(--primary);
+        }
+
+        .upload-dropzone p {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .upload-dropzone span {
+            font-size: 11.5px;
+            color: var(--text-muted);
+        }
+
+        .browse-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .browse-btn:hover {
+            background: #0f6fd4;
+            box-shadow: 0 2px 8px rgba(19, 127, 236, 0.3);
+        }
+
+        .secondary-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .secondary-btn:hover {
+            background: var(--primary-lighter);
+        }
+
+        .folder-input {
+            display: none;
+        }
+
+        .upload-meta {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .upload-meta-item {
+            background: var(--bg-main);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 10px 12px;
+        }
+
+        .upload-meta-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 4px;
+        }
+
+        .upload-meta-value {
+            font-size: 12px;
+            color: var(--text-primary);
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .status-message {
+            min-height: 18px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .status-message.error {
+            color: #b42318;
+        }
+
+        .status-message.success {
+            color: #027a48;
+        }
+
+        .hipaa-notice {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            background: var(--primary-lighter);
+            border: 1px solid #d4e8fc;
+            border-radius: var(--radius-md);
+            padding: 10px 12px;
+        }
+
+        .hipaa-notice .material-symbols-outlined {
+            font-size: 18px;
+            color: var(--primary);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .hipaa-notice p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Recent Analyses Card */
+        .analyses-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 14px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .analyses-card h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .empty-icon-wrapper {
+            width: 42px;
+            height: 42px;
+            background: var(--bg-main);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .empty-icon-wrapper .material-symbols-outlined {
+            font-size: 28px;
+            color: var(--text-muted);
+        }
+
+        .empty-state h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            max-width: 260px;
+            margin-bottom: 16px;
+        }
+
+        .get-started-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .get-started-link:hover {
+            opacity: 0.8;
+        }
+
+        .get-started-link .material-symbols-outlined {
+            font-size: 18px;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                height: auto;
+                min-height: 100vh;
+                border-radius: 0;
+            }
+
+            body {
+                padding: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container" id="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">
+                    <span class="material-symbols-outlined">neurology</span>
+                </div>
+                <div class="brand-info">
+                    <h1>NeuroSafe AI</h1>
+                    <span>Radiology Suite</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav" id="sidebar-nav">
+                <a href="#" class="nav-item active" id="nav-dashboard">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-item" id="nav-patients">
+                    <span class="material-symbols-outlined">groups</span>
+                    Patients
+                </a>
+                <a href="#" class="nav-item" id="nav-scans">
+                    <span class="material-symbols-outlined">clinical_notes</span>
+                    Scans
+                </a>
+                <a href="#" class="nav-item" id="nav-reports">
+                    <span class="material-symbols-outlined">description</span>
+                    Reports
+                </a>
+                <a href="#" class="nav-item" id="nav-settings">
+                    <span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+            </nav>
+
+            <div class="system-status" id="system-status">
+                <div class="system-status-label">System Status</div>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    AI Core Online
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header" id="top-header">
+                <div class="search-bar" id="search-bar">
+                    <span class="material-symbols-outlined">search</span>
+                    <input type="text" placeholder="Search patient ID, scan date, or status..." id="search-input">
+                </div>
+
+                <div class="header-actions">
+                    <button class="notification-btn" id="notification-btn" aria-label="Notifications">
+                        <span class="material-symbols-outlined">notifications</span>
+                    </button>
+                    <div class="user-profile" id="user-profile">
+                        <div class="user-info">
+                            <div class="user-name">Dr. Sarah Jenkins</div>
+                            <div class="user-role">Neurologist</div>
+                        </div>
+                        <div class="user-avatar">
+                            <span class="user-avatar-placeholder">SJ</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <main class="content-area" id="content-area">
+                <!-- Overview Header -->
+                <div class="overview-header" id="overview-header">
+                    <h2>Overview</h2>
+                    <p>Real-time analysis metrics and system performance.</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid" id="stats-grid">
+                    <div class="stat-card" id="stat-total-scans">
+                        <div class="stat-card-header">
+                            <div class="stat-icon">
+                                <span class="material-symbols-outlined">radiology</span>
+                            </div>
+                            <span class="stat-menu">···</span>
+                        </div>
+                        <div class="stat-label">Total Scans Analyzed</div>
+                        <div class="stat-value">0</div>
+                    </div>
+                    <div class="stat-card" id="stat-accuracy">
+                        <div class="stat-card-header">
+                            <div class="stat-icon">
+                                <span class="material-symbols-outlined">verified</span>
+                            </div>
+                            <span class="stat-menu">···</span>
+                        </div>
+                        <div class="stat-label">Accuracy Rate</div>
+                        <div class="stat-value">0%</div>
+                    </div>
+                    <div class="stat-card" id="stat-pending">
+                        <div class="stat-card-header">
+                            <div class="stat-icon">
+                                <span class="material-symbols-outlined">pending_actions</span>
+                            </div>
+                            <span class="stat-menu">···</span>
+                        </div>
+                        <div class="stat-label">Pending Reviews</div>
+                        <div class="stat-value">0</div>
+                    </div>
+                </div>
+
+                <!-- Content Grid -->
+                <div class="content-grid" id="content-grid">
+                    <!-- Upload New Scan -->
+                    <div class="upload-card" id="upload-card">
+                        <h3>Upload Patient Directory</h3>
+                        <div class="upload-dropzone" id="upload-dropzone">
+                            <div class="upload-icon-wrapper">
+                                <span class="material-symbols-outlined">cloud_upload</span>
+                            </div>
+                            <p>Select a patient folder with brain and bone subfolders</p>
+                            <span>Folder upload will run inference on matched brain and bone image pairs, then open a separate results page.</span>
+                            <div class="action-row">
+                                <button class="browse-btn" id="browse-btn" type="button">Select Folder</button>
+                                <button class="secondary-btn" id="inference-btn" type="button">Run Inference</button>
+                            </div>
+                            <input class="folder-input" id="folder-input" type="file" webkitdirectory directory multiple>
+                        </div>
+                        <div class="upload-meta">
+                            <div class="upload-meta-item">
+                                <div class="upload-meta-label">Selected Folder</div>
+                                <div class="upload-meta-value" id="folder-name">No folder selected</div>
+                            </div>
+                            <div class="upload-meta-item">
+                                <div class="upload-meta-label">Files Found</div>
+                                <div class="upload-meta-value" id="file-count">0</div>
+                            </div>
+                            <div class="upload-meta-item">
+                                <div class="upload-meta-label">Matched Pairs</div>
+                                <div class="upload-meta-value" id="pair-count">0</div>
+                            </div>
+                        </div>
+                        <div class="status-message" id="status-message"></div>
+                        <div class="hipaa-notice" id="hipaa-notice">
+                            <span class="material-symbols-outlined">info</span>
+                            <p>Your data is automatically anonymized following HIPAA regulations before AI processing.</p>
+                        </div>
+                    </div>
+
+                    <!-- Recent Analyses -->
+                    <div class="analyses-card" id="analyses-card">
+                        <h3>Recent Analyses</h3>
+                        <div class="empty-state" id="empty-state">
+                            <div class="empty-icon-wrapper">
+                                <span class="material-symbols-outlined">scan_delete</span>
+                            </div>
+                            <h4>No scans analyzed yet</h4>
+                            <p>Upload a scan to get started. Once processed, your results and AI insights will appear here.</p>
+                            <a href="#" class="get-started-link" id="get-started-link">
+                                <span class="material-symbols-outlined">add_circle</span>
+                                Get Started Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script>
+        const folderInput = document.getElementById('folder-input');
+        const browseBtn = document.getElementById('browse-btn');
+        const inferenceBtn = document.getElementById('inference-btn');
+        const folderName = document.getElementById('folder-name');
+        const fileCount = document.getElementById('file-count');
+        const pairCount = document.getElementById('pair-count');
+        const statusMessage = document.getElementById('status-message');
+        const getStartedLink = document.getElementById('get-started-link');
+        let selectedFiles = [];
+
+        function setStatus(message, type = '') {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${type}`.trim();
+        }
+
+        function updateFolderStats() {
+            if (!selectedFiles.length) {
+                folderName.textContent = 'No folder selected';
+                fileCount.textContent = '0';
+                pairCount.textContent = '0';
+                return;
+            }
+
+            const rootFolder = (selectedFiles[0].webkitRelativePath || '').split('/')[0] || 'Patient folder';
+            const brainFiles = new Set();
+            const boneFiles = new Set();
+
+            selectedFiles.forEach((file) => {
+                const relativePath = (file.webkitRelativePath || file.name).replaceAll('\\', '/');
+                if (relativePath.includes('/brain/')) {
+                    brainFiles.add(relativePath.split('/brain/')[1]);
+                } else if (relativePath.includes('/bone/')) {
+                    boneFiles.add(relativePath.split('/bone/')[1]);
+                }
+            });
+
+            folderName.textContent = rootFolder;
+            fileCount.textContent = String(selectedFiles.length);
+            pairCount.textContent = String([...brainFiles].filter((item) => boneFiles.has(item)).length);
+        }
+
+        async function runInference() {
+            if (!selectedFiles.length) {
+                setStatus('Select a patient folder before running inference.', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            selectedFiles.forEach((file) => {
+                formData.append('files', file, file.name);
+                formData.append('relative_paths', file.webkitRelativePath || file.name);
+            });
+
+            inferenceBtn.disabled = true;
+            inferenceBtn.textContent = 'Processing...';
+            setStatus('Uploading patient directory and running inference...');
+
+            try {
+                const response = await fetch('/predict-folder', {
+                    method: 'POST',
+                    body: formData
+                });
+                const payload = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(payload.error || 'Folder inference failed.');
+                }
+
+                sessionStorage.setItem('patientInference', JSON.stringify(payload));
+                setStatus('Inference complete. Redirecting to results page...', 'success');
+                window.location.href = '/results';
+            } catch (error) {
+                setStatus(error.message, 'error');
+            } finally {
+                inferenceBtn.disabled = false;
+                inferenceBtn.textContent = 'Run Inference';
+            }
+        }
+
+        browseBtn.addEventListener('click', () => folderInput.click());
+        getStartedLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            folderInput.click();
+        });
+        folderInput.addEventListener('change', (event) => {
+            selectedFiles = [...event.target.files];
+            updateFolderStats();
+            if (selectedFiles.length) {
+                setStatus('Patient directory loaded. Run inference to open the results page.');
+            }
+        });
+        inferenceBtn.addEventListener('click', runInference);
+    </script>
+</body>
+</html>
