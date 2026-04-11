@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 from PIL import Image
 from flask import Flask, jsonify, request, send_from_directory
-from torchvision import models, transforms
+from torpythonchvision import models, transforms
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "Saved Models", "best_dual_model.pth")
