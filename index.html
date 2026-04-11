@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="NeuroSafe AI - Brain Hemorrhage Detection Dashboard. AI-powered medical imaging analysis for neurological diagnostics.">
-    <title>NeuroSafe AI - Medical Dashboard</title>
+    <title>Haemora AI - Medical Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
     <style>
@@ -45,8 +45,9 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 12px;
+            align-items: flex-start;
+            padding: 10px;
+            overflow-y: auto;
         }
 
         /* ===== Dashboard Container ===== */
@@ -54,11 +55,12 @@
             display: flex;
             width: 100%;
             max-width: 1280px;
-            height: 540px;
+            min-height: min(96vh, 760px);
             background: var(--bg-card);
             border-radius: var(--radius-xl);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
             overflow: hidden;
+            margin: auto 0;
         }
 
         /* ===== Sidebar ===== */
@@ -192,7 +194,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 24px;
+            padding: 10px 20px;
             border-bottom: 1px solid var(--border-color);
             background: var(--bg-card);
         }
@@ -303,9 +305,11 @@
         /* ===== Content Area ===== */
         .content-area {
             flex: 1;
-            padding: 16px 24px;
+            padding: 14px 20px;
             overflow-y: auto;
             background: var(--bg-main);
+            display: flex;
+            flex-direction: column;
         }
 
         .content-area::-webkit-scrollbar {
@@ -332,7 +336,7 @@
         .overview-header p {
             font-size: 12px;
             color: var(--text-secondary);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         /* Stats Cards */
@@ -340,17 +344,17 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
-            padding: 16px 18px;
+            padding: 14px 16px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             box-shadow: var(--shadow-sm);
         }
 
@@ -389,7 +393,7 @@
         }
 
         .stat-value {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             color: var(--text-primary);
         }
@@ -399,6 +403,8 @@
             display: grid;
             grid-template-columns: 1fr 1.4fr;
             gap: 16px;
+            flex: 1;
+            min-height: 0;
         }
 
         /* Upload Card */
@@ -406,28 +412,30 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
-            padding: 14px;
+            padding: 12px;
             box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
         }
 
         .upload-card h3 {
             font-size: 13px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .upload-dropzone {
             border: 2px dashed var(--border-color);
             border-radius: var(--radius-lg);
-            padding: 14px 12px;
+            padding: 12px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s ease;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .upload-dropzone:hover {
@@ -436,14 +444,14 @@
         }
 
         .upload-icon-wrapper {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             background: var(--primary-light);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .upload-icon-wrapper .material-symbols-outlined {
@@ -452,7 +460,7 @@
         }
 
         .upload-dropzone p {
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 4px;
@@ -465,15 +473,15 @@
 
         .browse-btn {
             display: inline-block;
-            padding: 8px 20px;
+            padding: 8px 16px;
             background: var(--primary);
             color: white;
             border: none;
             border-radius: var(--radius-md);
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 12px;
+            margin-top: 10px;
             font-family: 'Inter', sans-serif;
             transition: all 0.2s ease;
         }
@@ -485,15 +493,15 @@
 
         .secondary-btn {
             display: inline-block;
-            padding: 8px 20px;
+            padding: 8px 16px;
             background: white;
             color: var(--primary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 12px;
+            margin-top: 10px;
             font-family: 'Inter', sans-serif;
             transition: all 0.2s ease;
         }
@@ -508,15 +516,15 @@
 
         .upload-meta {
             display: grid;
-            gap: 8px;
-            margin-bottom: 10px;
+            gap: 6px;
+            margin-bottom: 8px;
         }
 
         .upload-meta-item {
             background: var(--bg-main);
             border: 1px solid var(--border-light);
             border-radius: var(--radius-md);
-            padding: 10px 12px;
+            padding: 8px 10px;
         }
 
         .upload-meta-label {
@@ -537,15 +545,15 @@
 
         .action-row {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .status-message {
             min-height: 18px;
-            margin-bottom: 10px;
-            font-size: 12px;
+            margin-bottom: 8px;
+            font-size: 11.5px;
             font-weight: 600;
             color: var(--text-secondary);
         }
@@ -565,7 +573,8 @@
             background: var(--primary-lighter);
             border: 1px solid #d4e8fc;
             border-radius: var(--radius-md);
-            padding: 10px 12px;
+            padding: 8px 10px;
+            margin-top: auto;
         }
 
         .hipaa-notice .material-symbols-outlined {
@@ -586,17 +595,18 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
-            padding: 14px;
+            padding: 12px;
             box-shadow: var(--shadow-sm);
             display: flex;
             flex-direction: column;
+            min-height: 0;
         }
 
         .analyses-card h3 {
             font-size: 13px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .empty-state {
@@ -606,18 +616,18 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 8px;
+            padding: 6px;
         }
 
         .empty-icon-wrapper {
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             background: var(--bg-main);
             border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .empty-icon-wrapper .material-symbols-outlined {
@@ -626,18 +636,18 @@
         }
 
         .empty-state h4 {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .empty-state p {
-            font-size: 12.5px;
+            font-size: 12px;
             color: var(--text-muted);
-            line-height: 1.6;
+            line-height: 1.5;
             max-width: 260px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .get-started-link {
@@ -701,7 +711,7 @@
                     <span class="material-symbols-outlined">neurology</span>
                 </div>
                 <div class="brand-info">
-                    <h1>NeuroSafe AI</h1>
+                    <h1>Haemora AI</h1>
                     <span>Radiology Suite</span>
                 </div>
             </div>

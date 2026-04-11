@@ -5,41 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0f51fe32-065b-44b6-9ed9-ec7771a0ff87" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/Brain Haemorrahge Detection.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README_FLASK_APP.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradcam.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inference.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_utils.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements-docker.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/dashboard.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/dashboard.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/main.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/results/03b5536b-8e2f-490e-a013-f3b48da53542_Skull_Fracture_gradcam.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/results/16f34832-e2bc-464d-9a57-c9304704cbcc_Epidural_gradcam.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/results/1bec4eef-8745-425f-88d4-df53b808993a_Epidural_gradcam.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/results/1bec4eef-8745-425f-88d4-df53b808993a_Skull_Fracture_gradcam.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/results/227be86a-cc1c-4c11-8761-79722cfcc122_Epidural_gradcam.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/results/34473628-96b5-4287-8282-b0d50b62f590_Epidural_gradcam.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/results/34473628-96b5-4287-8282-b0d50b62f590_Skull_Fracture_gradcam.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/results/45111527-2b48-4f72-b26d-759c3c0daf06_Skull_Fracture_gradcam.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/results/6b1178cc-9df1-4816-aba7-2fe32f1c9bc4_Epidural_gradcam.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/results/6b1178cc-9df1-4816-aba7-2fe32f1c9bc4_Skull_Fracture_gradcam.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/results/cfd6d0d4-bcf3-47a3-9b6f-30a6056681bc_Skull_Fracture_gradcam.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/results/d4744a20-ccfd-4d55-be2d-ce6adf767b86_Epidural_gradcam.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/results/d4744a20-ccfd-4d55-be2d-ce6adf767b86_Skull_Fracture_gradcam.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/dashboard.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/6f331e21-b636-4769-82f6-4d8bccbd42d9.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/cfd6d0d4-bcf3-47a3-9b6f-30a6056681bc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/results.html" beforeDir="false" afterPath="$PROJECT_DIR$/results.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,17 +28,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.app.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "gui-testing",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.app.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;system__design&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

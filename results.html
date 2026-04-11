@@ -12,12 +12,16 @@
             font-family: 'Inter', sans-serif;
             background: #eef4f8;
             color: #1a2332;
+            min-height: 100vh;
+            overflow-y: auto;
         }
         .page {
             width: min(1360px, calc(100% - 32px));
-            margin: 20px auto;
+            min-height: calc(100vh - 32px);
+            margin: 16px auto;
             display: grid;
-            gap: 18px;
+            grid-template-rows: auto auto;
+            gap: 14px;
         }
         .card {
             background: #fff;
@@ -26,7 +30,7 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
         }
         .topbar {
-            padding: 22px 24px;
+            padding: 16px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -42,38 +46,50 @@
         button {
             border: 0;
             border-radius: 10px;
-            padding: 11px 16px;
+            padding: 10px 14px;
             font: inherit;
             font-weight: 600;
             cursor: pointer;
         }
         .primary { background: #137fec; color: #fff; }
         .secondary { background: #fff; color: #137fec; border: 1px solid #e3e8ef; }
+        .ghost {
+            background: #f5f8fb;
+            color: #1a2332;
+            border: 1px solid #e3e8ef;
+        }
         .content {
-            padding: 20px;
+            padding: 14px;
             display: grid;
-            grid-template-columns: 1.45fr .95fr;
-            gap: 18px;
+            grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.95fr);
+            gap: 14px;
+            align-items: start;
         }
         .section {
             border: 1px solid #e3e8ef;
             border-radius: 16px;
-            padding: 16px;
+            padding: 14px;
             background: #fff;
+        }
+        .viewer-panel {
+            display: grid;
+            grid-template-rows: auto auto auto auto auto;
+            gap: 10px;
         }
         .preview-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-top: 14px;
+            gap: 12px;
         }
         .preview-card {
             border-radius: 16px;
             overflow: hidden;
             background: #0d1522;
+            display: flex;
+            flex-direction: column;
         }
         .preview-label {
-            padding: 10px 12px;
+            padding: 8px 10px;
             color: #fff;
             font-size: 12px;
             font-weight: 700;
@@ -84,28 +100,52 @@
         .preview-card img {
             display: block;
             width: 100%;
-            aspect-ratio: 1 / 1;
+            height: min(34vh, 360px);
             object-fit: contain;
             background: #020617;
         }
         .controls {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             align-items: center;
             flex-wrap: wrap;
-            margin-top: 14px;
+            justify-content: space-between;
+        }
+        .control-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border-radius: 10px;
+            border: 1px solid #e3e8ef;
+            background: #f9fbfd;
+            font-size: 13px;
+            color: #5f6d7e;
+        }
+        .speed-control select {
+            border: 0;
+            background: transparent;
+            font: inherit;
+            font-weight: 600;
+            color: #1a2332;
+            outline: none;
         }
         .slider {
             width: 100%;
-            margin-top: 12px;
         }
         .stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
         .stat {
-            padding: 14px;
+            padding: 12px;
             border-radius: 14px;
             background: #f5f8fb;
             border: 1px solid #e3e8ef;
@@ -116,15 +156,20 @@
             margin-bottom: 6px;
         }
         .stat-value {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
+        }
+        .right-column {
+            display: grid;
+            grid-template-rows: auto auto;
+            gap: 14px;
         }
         .meta-list, .timeline {
             display: grid;
-            gap: 10px;
+            gap: 8px;
         }
         .meta-row, .timeline-item {
-            padding: 13px 14px;
+            padding: 11px 12px;
             border-radius: 14px;
             border: 1px solid #e3e8ef;
             background: #f9fbfd;
@@ -138,7 +183,8 @@
         .meta-value { font-size: 13px; font-weight: 600; text-align: right; word-break: break-word; }
         .timeline {
             max-height: 420px;
-            overflow: auto;
+            overflow-y: auto;
+            padding-right: 4px;
         }
         .timeline-item {
             cursor: pointer;
@@ -171,7 +217,14 @@
             color: #5f6d7e;
         }
         @media (max-width: 1100px) {
-            .content, .preview-grid, .stats { grid-template-columns: 1fr; }
+            .page {
+                min-height: auto;
+            }
+            .content, .preview-grid, .stats, .right-column { grid-template-columns: 1fr; grid-template-rows: auto; }
+            .preview-card img {
+                height: auto;
+                aspect-ratio: 1 / 1;
+            }
         }
     </style>
 </head>
@@ -184,13 +237,12 @@
             </div>
             <div class="actions">
                 <button class="secondary" id="back-btn" type="button">Back To Upload</button>
-                <button class="primary" id="play-btn" type="button">Play</button>
             </div>
         </header>
 
         <section class="card content" id="content" hidden>
             <div>
-                <div class="section">
+                <div class="section viewer-panel">
                     <h2>Dual Preview</h2>
                     <p class="muted" id="viewer-summary"></p>
                     <div class="preview-grid">
@@ -204,9 +256,24 @@
                         </div>
                     </div>
                     <div class="controls">
-                        <button class="secondary" id="prev-btn" type="button">Previous</button>
-                        <button class="secondary" id="next-btn" type="button">Next</button>
-                        <strong id="frame-label"></strong>
+                        <div class="control-group">
+                            <button class="secondary" id="prev-btn" type="button">Previous</button>
+                            <button class="primary" id="play-btn" type="button">Play</button>
+                            <button class="ghost" id="pause-btn" type="button">Pause</button>
+                            <button class="secondary" id="next-btn" type="button">Next</button>
+                        </div>
+                        <div class="control-group">
+                            <label class="speed-control" for="speed-select">
+                                Speed
+                                <select id="speed-select">
+                                    <option value="1800">0.5x</option>
+                                    <option value="1200" selected>1x</option>
+                                    <option value="800">1.5x</option>
+                                    <option value="500">2x</option>
+                                </select>
+                            </label>
+                            <strong id="frame-label"></strong>
+                        </div>
                     </div>
                     <input class="slider" id="slice-slider" type="range" min="0" max="0" value="0">
                 </div>
@@ -234,7 +301,7 @@
                 </div>
             </div>
 
-            <aside>
+            <aside class="right-column">
                 <div class="section">
                     <h3>Selected Slice</h3>
                     <div class="meta-list">
@@ -276,9 +343,11 @@
         const emptyState = document.getElementById('empty-state');
         const backBtn = document.getElementById('back-btn');
         const playBtn = document.getElementById('play-btn');
+        const pauseBtn = document.getElementById('pause-btn');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
         const slider = document.getElementById('slice-slider');
+        const speedSelect = document.getElementById('speed-select');
         const viewerSummary = document.getElementById('viewer-summary');
         const frameLabel = document.getElementById('frame-label');
         const brainImage = document.getElementById('brain-image');
@@ -295,6 +364,7 @@
         const timeline = document.getElementById('timeline');
         let currentIndex = 0;
         let playbackHandle = null;
+        let playbackDelay = Number(speedSelect.value);
 
         function renderTimeline() {
             timeline.innerHTML = inferenceData.slices.map((slice, index) => `
@@ -331,18 +401,23 @@
             renderTimeline();
         }
 
-        function togglePlayback() {
+        function stopPlayback() {
             if (playbackHandle) {
                 clearInterval(playbackHandle);
                 playbackHandle = null;
-                playBtn.textContent = 'Play';
-                return;
             }
+            playBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+
+        function startPlayback() {
+            stopPlayback();
             playbackHandle = setInterval(() => {
                 currentIndex = (currentIndex + 1) % inferenceData.slices.length;
                 renderSlice();
-            }, 1200);
-            playBtn.textContent = 'Pause';
+            }, playbackDelay);
+            playBtn.disabled = true;
+            pauseBtn.disabled = false;
         }
 
         if (inferenceData && Array.isArray(inferenceData.slices) && inferenceData.slices.length) {
@@ -360,7 +435,10 @@
             window.location.href = '/';
         });
         playBtn.addEventListener('click', () => {
-            if (inferenceData?.slices?.length) togglePlayback();
+            if (inferenceData?.slices?.length) startPlayback();
+        });
+        pauseBtn.addEventListener('click', () => {
+            stopPlayback();
         });
         prevBtn.addEventListener('click', () => {
             if (!inferenceData?.slices?.length) return;
@@ -377,6 +455,13 @@
             currentIndex = Number(event.target.value);
             renderSlice();
         });
+        speedSelect.addEventListener('change', (event) => {
+            playbackDelay = Number(event.target.value);
+            if (playbackHandle) {
+                startPlayback();
+            }
+        });
+        stopPlayback();
     </script>
 </body>
 </html>
